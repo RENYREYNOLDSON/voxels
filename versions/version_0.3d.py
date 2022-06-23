@@ -9,6 +9,8 @@ height=info.current_w*(9/16)
 screen = pygame.display.set_mode((width,height))#pygame.FULLSCREEN
 pixel = pygame.Surface((320,180))#pygame.FULLSCREEN
 
+pygame.mouse.set_visible(False)
+
 worldx,worldy=0,0
 blocksx,blocksy=200,2000
 ground_level=1000
@@ -29,6 +31,7 @@ font=pygame.font.Font("./fonts/small_pixel.ttf", 6)
 
 character = pygame.image.load("./textures/character.png").convert_alpha()
 
+cursor_img = pygame.image.load("./textures/cursor.png").convert_alpha()
 break_0 = pygame.image.load("./textures/break_0.png").convert_alpha()
 break_1 = pygame.image.load("./textures/break_1.png").convert_alpha()
 break_2 = pygame.image.load("./textures/break_2.png").convert_alpha()
@@ -485,9 +488,6 @@ def draw_inventory():
                 text = font.render(str(itemR), False,(255,255,255))
                 pixel.blit(text,(315-text.get_width()-c*17,170))
 
-
-
-                #item.draw(293,start+r*17+4)
                 if clicked==True and (craftable==True or god_mode==True):
                     #Check if player has ingredients and inv space here
                     inventory.add_item(itemR,recipe_dict[r].number)
@@ -695,6 +695,9 @@ def check_ladder():
     else:
         return False
 
+def draw_cursor():
+    screen.blit(cursor_img,(int(mousex/(320/width)),int(mousey/(180/height))))
+
 #Create blocks from bottom, with semi random heights
 global_array=[]
 back_global_array=[]
@@ -798,6 +801,7 @@ while True:
     right_clicked=False
     collision_array=[False,False,False,False]#N,E,S,W
     screen.blit(pygame.transform.scale(pixel,(width,height)),(0,0))
+    draw_cursor()
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
