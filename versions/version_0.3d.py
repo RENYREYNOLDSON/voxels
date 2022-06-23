@@ -25,42 +25,42 @@ inventory_open=False
 climbing=False
 
 font = pygame.font.SysFont("Arial" , 20)
-font=pygame.font.Font("../fonts/small_pixel.ttf", 6)
+font=pygame.font.Font("./fonts/small_pixel.ttf", 6)
 
-character = pygame.image.load("../textures/character.png").convert_alpha()
+character = pygame.image.load("./textures/character.png").convert_alpha()
 
-break_0 = pygame.image.load("../textures/break_0.png").convert_alpha()
-break_1 = pygame.image.load("../textures/break_1.png").convert_alpha()
-break_2 = pygame.image.load("../textures/break_2.png").convert_alpha()
-pickaxe = pygame.image.load("../textures/pickaxe.png").convert_alpha()
+break_0 = pygame.image.load("./textures/break_0.png").convert_alpha()
+break_1 = pygame.image.load("./textures/break_1.png").convert_alpha()
+break_2 = pygame.image.load("./textures/break_2.png").convert_alpha()
+pickaxe = pygame.image.load("./textures/pickaxe.png").convert_alpha()
 
 #Block images
-dirt_img = pygame.image.load("../textures/Dirt.png").convert()
+dirt_img = pygame.image.load("./textures/Dirt.png").convert()
 
-dirt_imgB = pygame.image.load("../textures/Dirt.png").convert()
+dirt_imgB = pygame.image.load("./textures/Dirt.png").convert()
 dirt_imgB.fill((50,50,50), special_flags=pygame.BLEND_RGB_ADD) 
-stone_img = pygame.image.load("../textures/Stone.png").convert()
-stone_imgB = pygame.image.load("../textures/StoneB.png").convert()
-grass_img = pygame.image.load("../textures/Grass.png").convert()
-gold_img = pygame.image.load("../textures/Gold.png").convert()
-marble_img = pygame.image.load("../textures/Marble.png").convert()
-lead_img = pygame.image.load("../textures/Lead.png").convert()
-diamond_img = pygame.image.load("../textures/Diamond.png").convert()
-iron_img = pygame.image.load("../textures/Iron.png").convert()
-copper_img = pygame.image.load("../textures/Copper.png").convert()
-brick_img = pygame.image.load("../textures/Brick.png").convert()
-light_img = pygame.image.load("../textures/Light.png").convert_alpha()
-ladder_img = pygame.image.load("../textures/Ladder.png").convert_alpha()
-glass_img = pygame.image.load("../textures/Glass.png").convert_alpha()
-metal_img = pygame.image.load("../textures/Metal.png").convert_alpha()
-chest_img = pygame.image.load("../textures/Chest.png").convert_alpha()
+stone_img = pygame.image.load("./textures/Stone.png").convert()
+stone_imgB = pygame.image.load("./textures/StoneB.png").convert()
+grass_img = pygame.image.load("./textures/Grass.png").convert()
+gold_img = pygame.image.load("./textures/Gold.png").convert()
+marble_img = pygame.image.load("./textures/Marble.png").convert()
+lead_img = pygame.image.load("./textures/Lead.png").convert()
+diamond_img = pygame.image.load("./textures/Diamond.png").convert()
+iron_img = pygame.image.load("./textures/Iron.png").convert()
+copper_img = pygame.image.load("./textures/Copper.png").convert()
+brick_img = pygame.image.load("./textures/Brick.png").convert()
+light_img = pygame.image.load("./textures/Light.png").convert_alpha()
+ladder_img = pygame.image.load("./textures/Ladder.png").convert_alpha()
+glass_img = pygame.image.load("./textures/Glass.png").convert_alpha()
+metal_img = pygame.image.load("./textures/Metal.png").convert_alpha()
+chest_img = pygame.image.load("./textures/Chest.png").convert_alpha()
 
 #Importing Sounds
 pygame.mixer.init()
-break_SOUND=pygame.mixer.Sound("../sounds/break.ogg")
+break_SOUND=pygame.mixer.Sound("./sounds/break.ogg")
 pygame.mixer.Sound.set_volume(break_SOUND,0.2)
 
-click_SOUND=pygame.mixer.Sound("../sounds/click.ogg")
+click_SOUND=pygame.mixer.Sound("./sounds/click.ogg")
 pygame.mixer.Sound.set_volume(click_SOUND,0.3)
 
 
