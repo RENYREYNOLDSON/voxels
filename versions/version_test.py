@@ -25,51 +25,48 @@ inventory_open=False
 climbing=False
 
 font = pygame.font.SysFont("Arial" , 20)
-font=pygame.font.Font("./fonts/small_pixel.ttf", 6)
+font=pygame.font.Font("../fonts/small_pixel.ttf", 6)
 
-character = pygame.image.load("./textures/character.png").convert_alpha()
+character = pygame.image.load("../textures/character.png").convert_alpha()
 
-break_0 = pygame.image.load("./textures/break_0.png").convert_alpha()
-break_1 = pygame.image.load("./textures/break_1.png").convert_alpha()
-break_2 = pygame.image.load("./textures/break_2.png").convert_alpha()
-pickaxe = pygame.image.load("./textures/pickaxe.png").convert_alpha()
+break_0 = pygame.image.load("../textures/break_0.png").convert_alpha()
+break_1 = pygame.image.load("../textures/break_1.png").convert_alpha()
+break_2 = pygame.image.load("../textures/break_2.png").convert_alpha()
+pickaxe = pygame.image.load("../textures/pickaxe.png").convert_alpha()
 
 #Block images
-dirt_img = pygame.image.load("./textures/Dirt.png").convert()
+dirt_img = pygame.image.load("../textures/Dirt.png").convert()
 
-dirt_imgB = pygame.image.load("./textures/Dirt.png").convert()
+dirt_imgB = pygame.image.load("../textures/Dirt.png").convert()
 dirt_imgB.fill((50,50,50), special_flags=pygame.BLEND_RGB_ADD) 
-stone_img = pygame.image.load("./textures/Stone.png").convert()
-stone_imgB = pygame.image.load("./textures/StoneB.png").convert()
-grass_img = pygame.image.load("./textures/Grass.png").convert()
-gold_img = pygame.image.load("./textures/Gold.png").convert()
-marble_img = pygame.image.load("./textures/Marble.png").convert()
-lead_img = pygame.image.load("./textures/Lead.png").convert()
-diamond_img = pygame.image.load("./textures/Diamond.png").convert()
-iron_img = pygame.image.load("./textures/Iron.png").convert()
-copper_img = pygame.image.load("./textures/Copper.png").convert()
-brick_img = pygame.image.load("./textures/Brick.png").convert()
-light_img = pygame.image.load("./textures/Light.png").convert_alpha()
-ladder_img = pygame.image.load("./textures/Ladder.png").convert_alpha()
-glass_img = pygame.image.load("./textures/Glass.png").convert_alpha()
-metal_img = pygame.image.load("./textures/Metal.png").convert_alpha()
-chest_img = pygame.image.load("./textures/Chest.png").convert_alpha()
+stone_img = pygame.image.load("../textures/Stone.png").convert()
+stone_imgB = pygame.image.load("../textures/StoneB.png").convert()
+grass_img = pygame.image.load("../textures/Grass.png").convert()
+gold_img = pygame.image.load("../textures/Gold.png").convert()
+marble_img = pygame.image.load("../textures/Marble.png").convert()
+lead_img = pygame.image.load("../textures/Lead.png").convert()
+diamond_img = pygame.image.load("../textures/Diamond.png").convert()
+iron_img = pygame.image.load("../textures/Iron.png").convert()
+copper_img = pygame.image.load("../textures/Copper.png").convert()
+brick_img = pygame.image.load("../textures/Brick.png").convert()
+light_img = pygame.image.load("../textures/Light.png").convert_alpha()
+ladder_img = pygame.image.load("../textures/Ladder.png").convert_alpha()
+glass_img = pygame.image.load("../textures/Glass.png").convert_alpha()
+metal_img = pygame.image.load("../textures/Metal.png").convert_alpha()
+chest_img = pygame.image.load("../textures/Chest.png").convert_alpha()
 
 #Importing Sounds
 pygame.mixer.init()
-break_SOUND=pygame.mixer.Sound("./sounds/break.ogg")
+break_SOUND=pygame.mixer.Sound("../sounds/break.ogg")
 pygame.mixer.Sound.set_volume(break_SOUND,0.2)
 
-click_SOUND=pygame.mixer.Sound("./sounds/click.ogg")
+click_SOUND=pygame.mixer.Sound("../sounds/click.ogg")
 pygame.mixer.Sound.set_volume(click_SOUND,0.3)
 
 
 
-
-
-
-
 #Items - store in folder and load later on
+#array in key value [colour1, colour2, break time, image, backup image]
 item_dict={"Dirt":[(127,81,18),(123,76,15),10,dirt_img,dirt_imgB],
             "Grass":[(127,81,18),(123,76,15),10,grass_img],
             "Stone":[(100,100,100),(110,110,100),30,stone_img,stone_imgB],
@@ -210,13 +207,14 @@ class Inventory:
                 return
 
     def remove_item(self,item,number):
-        for i in range(len(self.items)):
-            if self.items[i]!="None":
-                if self.items[i].item==item:
-                    self.items[i].count-=number
-                    if self.items[i].count<=0:
-                        self.items[i]="None"
-                    return
+        if god_mode == False:
+            for i in range(len(self.items)):
+                if self.items[i]!="None":
+                    if self.items[i].item==item:
+                        self.items[i].count-=number
+                        if self.items[i].count<=0:
+                            self.items[i]="None"
+                        return
 
     def update_selected(self,value):
         self.selected+=value
@@ -248,6 +246,7 @@ class Block:
         self.max_health=10
         self.back=False
         self.passable=False
+
     def drawR(self):
         pygame.draw.rect(pixel,(255,0,0),(worldx+self.x,worldy+self.y,16,16),2)
 
@@ -259,9 +258,14 @@ class Block:
         if self.back==False:#Only process if an actual block
             #Distance from centre:
             #dist=math.sqrt((worldx+self.x-160)**2+(worldy+self.y-90)**2)
+            # new = new image for block
+            # v = value of light_global_array for that block
+            
             new=item_dict[self.item][3].copy()
             v=light_global_array[self.listx][self.listy]
-            new.fill((v,v,v), special_flags=pygame.BLEND_RGB_SUB) 
+            # see the part in the else back == false
+            if god_mode == False:
+                new.fill((v,v,v), special_flags=pygame.BLEND_RGB_SUB) 
             pixel.blit(new,(worldx+self.x,worldy+self.y))
 
             if worldx+self.x<mousex and worldx+self.x+16>mousex and worldy+self.y<mousey and worldy+self.y+16>mousey:
@@ -293,7 +297,9 @@ class Block:
             #dist=math.sqrt((worldx+self.x-160)**2+(worldy+self.y-90)**2)
             new=item_dict[self.item][4].copy()
             v=light_global_array[self.listx][self.listy]
-            new.fill((v,v,v), special_flags=pygame.BLEND_RGB_SUB) 
+            # so if we are in god mode we dont apply the dark effect to the block
+            if god_mode == False:
+                new.fill((v,v,v), special_flags=pygame.BLEND_RGB_SUB) 
             pixel.blit(new,(worldx+self.x,worldy+self.y))
 
     def check_col(self):
@@ -351,7 +357,6 @@ def update_light_array(lux,x,y):
                     light_global_array[x-7+xb][y+7-yb]=val
             else:
                 light_global_array[x-7+xb][y+7-yb]=min(255,val)
-
     #Max distance is 4, which should be 0, exponential
 
 
@@ -764,6 +769,7 @@ block_array=[]
 back_array=[]
 inventory=Inventory()
 
+# here is the game loop
 while True:
     pixel.fill([173,216,230])
 
