@@ -804,9 +804,6 @@ while True:
                 velocityx+=speed
             elif event.key==pygame.K_a:
                 velocityx-=speed
-            elif event.key==pygame.K_SPACE:
-                if velocityy==0 or double_jump:
-                    velocityy=jump_velocity
             elif event.key==pygame.K_w:
                 climbing=False
                 climbing_speed=1
@@ -842,6 +839,9 @@ while True:
                 inventory.selected=6
             elif event.key==pygame.K_8:
                 inventory.selected=7
+            elif event.key==pygame.K_SPACE:
+                if velocityy==0 or double_jump:
+                    velocityy=jump_velocity
         elif event.type==pygame.MOUSEMOTION:
             mousex,mousey=event.pos
             mousex=mousex*(320/width)
