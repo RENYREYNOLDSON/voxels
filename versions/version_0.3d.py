@@ -203,13 +203,14 @@ class Inventory:
                 return
 
     def remove_item(self,item,number):
-        for i in range(len(self.items)):
-            if self.items[i]!="None":
-                if self.items[i].item==item:
-                    self.items[i].count-=number
-                    if self.items[i].count<=0:
-                        self.items[i]="None"
-                    return
+        if god_mode == False:
+            for i in range(len(self.items)):
+                if self.items[i]!="None":
+                    if self.items[i].item==item:
+                        self.items[i].count-=number
+                        if self.items[i].count<=0:
+                            self.items[i]="None"
+                        return
 
     def update_selected(self,value):
         self.selected+=value
