@@ -918,7 +918,6 @@ while True:
 #Add colour to lights
 #Make lamps breaking work!
 #Add ladder speed
-#Add god mode lighting
 #Make lighting actually work well
 #Fix line glitch at around 1050
 #Need to cancel held item when closed or clicked off
