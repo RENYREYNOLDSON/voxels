@@ -57,6 +57,7 @@ ladder_img = pygame.image.load("./textures/Ladder.png").convert_alpha()
 glass_img = pygame.image.load("./textures/Glass.png").convert_alpha()
 metal_img = pygame.image.load("./textures/Metal.png").convert_alpha()
 chest_img = pygame.image.load("./textures/Chest.png").convert_alpha()
+stonewall_img = pygame.image.load("./textures/Stonewall.png").convert_alpha()
 
 #Importing Sounds
 pygame.mixer.init()
@@ -87,7 +88,8 @@ item_dict={"Dirt":[(127,81,18),(123,76,15),10,dirt_img,dirt_imgB],
             "Ladder":[(0,200,250),(20,240,240),5,ladder_img],
             "Glass":[(0,200,250),(20,240,240),5,glass_img],
             "Metal":[(0,200,250),(20,240,240),40,metal_img],
-            "Chest":[(0,200,250),(20,240,240),20,chest_img],}
+            "Chest":[(0,200,250),(20,240,240),20,chest_img],
+            "Stonewall":[(0,200,250),(20,240,240),100,stonewall_img],}
 
 
 
@@ -146,6 +148,7 @@ recipe_dict=[Recipe("Brick",[["Dirt",5],["Stone",2]],3),
             Recipe("Ladder",[["Dirt",5]],10),
             Recipe("Glass",[["Dirt",2]],10),
             Recipe("Metal",[["Iron",5]],5),
+            Recipe("Stonewall",[["Stone",5]],5),
             Recipe("Chest",[["Dirt",5],["Iron",2]],1)]
 
 
