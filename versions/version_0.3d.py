@@ -92,7 +92,7 @@ item_dict={"Dirt":[(127,81,18),(123,76,15),10,dirt_img,dirt_imgB],
 
 
 
-#DEVELOPER OPTIONS
+###########DEVELOPER OPTIONS
 double_jump=False
 speed_mult=1
 jump_mult=1
@@ -101,20 +101,7 @@ action_dist_mult=1
 
 god_mode=False
 
-def toggle_god():
-    global double_jump,mine_mult,action_dist_mult,action_distance,god_mode
-    if god_mode==False:
-        double_jump=True
-        mine_mult=100
-        action_dist_mult=10
-        action_distance=56*action_dist_mult
-        god_mode=True
-    else:
-        double_jump=False
-        mine_mult=1
-        action_dist_mult=1
-        action_distance=56*action_dist_mult
-        god_mode=False
+
 #################
 
 #Global Variables
@@ -189,8 +176,8 @@ class ItemOther(Item):
 
 class Inventory:
     def __init__(self):
-        self.items=[Tool("Pickaxe",pickaxe),ItemBlock("Dirt"),"None","None","None","None","None","None",
-        "None","None","None","None","None",ItemBlock("Stone"),"None","None",
+        self.items=[Tool("Pickaxe",pickaxe),"None","None","None","None","None","None","None",
+        "None","None","None","None","None","None","None","None",
         "None","None","None","None","None","None","None","None"]#Item,Count
         self.selected=0
         self.held="None"
@@ -260,8 +247,9 @@ class Block:
             #Distance from centre:
             #dist=math.sqrt((worldx+self.x-160)**2+(worldy+self.y-90)**2)
             new=item_dict[self.item][3].copy()
-            v=light_global_array[self.listx][self.listy]
-            new.fill((v,v,v), special_flags=pygame.BLEND_RGB_SUB) 
+            if not god_mode:
+                v=light_global_array[self.listx][self.listy]
+                new.fill((v,v,v), special_flags=pygame.BLEND_RGB_SUB) 
             pixel.blit(new,(worldx+self.x,worldy+self.y))
 
             if worldx+self.x<mousex and worldx+self.x+16>mousex and worldy+self.y<mousey and worldy+self.y+16>mousey:
@@ -292,8 +280,9 @@ class Block:
             #Distance from centre:
             #dist=math.sqrt((worldx+self.x-160)**2+(worldy+self.y-90)**2)
             new=item_dict[self.item][4].copy()
-            v=light_global_array[self.listx][self.listy]
-            new.fill((v,v,v), special_flags=pygame.BLEND_RGB_SUB) 
+            if not god_mode:
+                v=light_global_array[self.listx][self.listy]
+                new.fill((v,v,v), special_flags=pygame.BLEND_RGB_SUB) 
             pixel.blit(new,(worldx+self.x,worldy+self.y))
 
     def check_col(self):
@@ -364,7 +353,8 @@ def draw_character():
     firstx=-int((startx+worldx)/16)-1
     v=light_global_array[firstx+11][firsty-7]
     c=character.copy()
-    c.fill((v,v,v), special_flags=pygame.BLEND_RGB_SUB) 
+    if not god_mode:
+        c.fill((v,v,v), special_flags=pygame.BLEND_RGB_SUB) 
 
     if direction=="right":
         pixel.blit(c,(152,82))
@@ -514,8 +504,6 @@ def draw_inventory():
 
 def move_character():
     global worldx,worldy,velocityy
-
-
     if collision_array[2]==False:
         if velocityy>(-gravity):
             velocityy-=0.3
@@ -664,6 +652,21 @@ def background():
     elif worldy<-(ground_level-90):
         pygame.draw.rect(pixel,(64,41,9),(0,ground_level+90+worldy,320,300))#Y pos should be where level 1000 is
 
+#God
+def toggle_god():
+    global double_jump,mine_mult,action_dist_mult,action_distance,god_mode
+    if god_mode==False:
+        double_jump=True
+        mine_mult=100
+        action_dist_mult=10
+        action_distance=56*action_dist_mult
+        god_mode=True
+    else:
+        double_jump=False
+        mine_mult=1
+        action_dist_mult=1
+        action_distance=56*action_dist_mult
+        god_mode=False
 
 def check_action():
     #Place Item here
@@ -917,8 +920,6 @@ while True:
 #Add usable objects - chest, door, hatch, ladder
 #Binning items
 #popout animation for inv
-#CLEAN CODE AND DO GITHUB
-
 
 
 
