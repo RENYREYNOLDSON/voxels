@@ -5,9 +5,29 @@
 ![Example Image](/Capture.PNG)
 
 ## Milestones
+* _V0.4: The Combat Update_
+    - Add health system
+    - Add enemies
+    - Add weapons
+    - Add armour
+    - World edges
+* _V0.5: Improvements & Bosses_
+    - Add 2 bosses
+    - Improve textures
+    - Rehaul surface generation
+    - Add underground structures
+    - Add deeper cave layers
+    - Paralax background
+    - Add blowing grass and pixel art
+* _V0.6: Functionality Update_
+    - Furnaces
+    - Machines
+    - Workbench
+    - Computer / Wiki
+    - Enchanter
+    - Trees & axe
 
-
-## Ideas
+## To-Do List
 * _Bugs_
     - Fix line glitch around y = 1050
 * _Performance_
@@ -28,3 +48,5 @@
     - Add usable objects - chest, door, hatch, ladder
     - Add items dropping and picking them up
     - Need to cancel held item when closed or clicked off
+
+## Implemented
