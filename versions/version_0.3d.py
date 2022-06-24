@@ -103,13 +103,10 @@ speed_mult=1
 jump_mult=1
 mine_mult=1
 action_dist_mult=1
-
 god_mode=False
-
-
 #################
 
-#Global Variables
+###########Global Variables
 speed=1*speed_mult
 jump_velocity=5*jump_mult
 gravity=10
@@ -119,18 +116,23 @@ climbing_speed=1
 count=1050
 starty=17000
 startx=-(blocksx*8)
+###################
 
 
-
-def fps_counter():
+def fps_counter():#DISPLAYS FPS IN UPPER CORNER
     fps = str(int(clock.get_fps()))
     fps_t = font.render(fps , False, pygame.Color("RED"))
     pixel.blit(fps_t,(0,0))
 
-def dev_info():
+def dev_info():#SHOWS COORDINATES AND ANY OTHER DEV INFO
     x= font.render(str("x:"+str(int((worldx+8)/16))+" y:"+str(int((starty+worldy)/16))), False, pygame.Color("RED"))
     pixel.blit(x,(0,174))
 
+
+#CLASSES
+####################################################################################################
+
+#CLASS FOR EACH CRAFTING RECIPE
 class Recipe:
     def __init__(self,item,ingredients,number):
         self.item=item
@@ -142,22 +144,13 @@ class Recipe:
         text = font.render(str(self.number), False,(255,255,255))
         pixel.blit(text,(x+11-(text.get_width()),y+4))
 
-#INITIALISE RECIPES HERE
-recipe_dict=[Recipe("Brick",[["Dirt",5],["Stone",2]],3),
-            Recipe("Light",[["Dirt",5]],3),
-            Recipe("Ladder",[["Dirt",5]],10),
-            Recipe("Glass",[["Dirt",2]],10),
-            Recipe("Metal",[["Iron",5]],5),
-            Recipe("Stonewall",[["Stone",5]],5),
-            Recipe("Chest",[["Dirt",5],["Iron",2]],1)]
-
-
-    
-
+#CLASS FOR EACH INVENTORY ITEM
 class Item:
     def __init__(self,item):
         self.item=item
         self.count=1
+
+#CHILD OF ITEM FOR TOOLS
 class Tool(Item):
     def __init__(self,item,img):
         self.item=item
@@ -166,20 +159,16 @@ class Tool(Item):
         self.count=1
     def draw(self,x,y):
         pixel.blit(self.img,(x,y))
+
+#CHILD OF ITEM FOR BLOCKS
 class ItemBlock(Item):
     def draw(self,x,y):
         img=pygame.transform.scale(item_dict[self.item][3],(8,8))
         pixel.blit(img,(x,y))
         text = font.render(str(self.count), False,(255,255,255))
         pixel.blit(text,(x+11-(text.get_width()),y+4))
-        
 
-
-class ItemOther(Item):
-    pass
-
-
-
+#CLASS FOR THE MAIN INVENTORY
 class Inventory:
     def __init__(self):
         self.items=[Tool("Pickaxe",pickaxe),"None","None","None","None","None","None","None",
@@ -230,7 +219,7 @@ class Inventory:
         else:
             return False
 
-
+#CLASS FOR THE BLOCKS IN THE WORLD
 class Block:
     def __init__(self,x,y,item,listx,listy):
         self.x=x
@@ -248,11 +237,7 @@ class Block:
     def draw(self):
         if self.item=="None":
             return
-        
-        
         if self.back==False:#Only process if an actual block
-            #Distance from centre:
-            #dist=math.sqrt((worldx+self.x-160)**2+(worldy+self.y-90)**2)
             new=item_dict[self.item][3].copy()
             if not god_mode:
                 v=light_global_array[self.listx][self.listy]
@@ -281,11 +266,9 @@ class Block:
                                 else:
                                     pixel.blit(break_2,(worldx+self.x,worldy+self.y))
 
-                    #draw_selected(worldx+self.x,worldy+self.y,(255,255,255))
                     pygame.draw.rect(pixel,(255,255,255),(worldx+self.x,worldy+self.y,16,16),1)
         else:
             #Distance from centre:
-            #dist=math.sqrt((worldx+self.x-160)**2+(worldy+self.y-90)**2)
             new=item_dict[self.item][4].copy()
             if not god_mode:
                 v=light_global_array[self.listx][self.listy]
@@ -296,22 +279,16 @@ class Block:
         if self.item=="None" or self.passable==True:
             return
         global collision_array,worldy,worldx
-
-        #South- check if about to collide, set accordingly. Use velocityy
+        #South
         if worldx+self.x>137 and worldx+self.x<166 and worldy+self.y+velocityy<=98 and worldy+self.y+velocityy>82:
             collision_array[2]=True
-
-        #North - use velocityy here too
+        #North
         if worldx+self.x>137 and worldx+self.x<166 and worldy+self.y+velocityy>=67 and worldy+self.y+velocityy<80:
             collision_array[0]=True
-
         #East
-
         if worldx+self.x>=166 and worldx+self.x<166+speed and worldy+self.y>67 and worldy+self.y<97:
             collision_array[1]=True
-
         #West
-
         if worldx+self.x<=137 and worldx+self.x>137-speed and worldy+self.y>67 and worldy+self.y<97:
             collision_array[3]=True
 
@@ -334,11 +311,20 @@ class Block:
         if new=="Light":
             update_light_array(150,self.listx,self.listy)
 
+######################################################################################################
 
+
+
+
+
+
+#FUNCTIONS
+######################################################################################################
+
+
+#ADD RADIUS OF LIGHT TO LIGHT ARRAY WHEN LAMP PLACED ETC
 def update_light_array(lux,x,y):
     global light_global_array
-    #light_global_array[x][y]=max(0,light_global_array[x][y]-lux)
-    #Do in circle surrounding from here, make it affected by walls later
     for xb in range(15):
         for yb in range(15):
             val=max(0,255-lux*8/(math.sqrt(abs(xb-7)**2+abs(yb-7)**2)+1))
@@ -348,13 +334,11 @@ def update_light_array(lux,x,y):
             else:
                 light_global_array[x-7+xb][y+7-yb]=min(255,val)
 
-    #Max distance is 4, which should be 0, exponential
-
-
+#ROUND TO NEAREST MULTIPLE OF NUMBER PROVIDED
 def rounder(number,multiple):
     return multiple*round(number/multiple)
 
-
+#DRAW THE CHARACTER SPRITE TO THE SCREEN IN CORRECT ORIENTATION AND IMAGE
 def draw_character():
     firsty=int((starty+worldy+122)/16)#Lighting character based on global light array
     firstx=-int((startx+worldx)/16)-1
@@ -370,6 +354,7 @@ def draw_character():
         pixel.blit(rev,(152,82))
 
 
+#DRAWS A 'SELECTED' BOX ON A SELECTED ITEM ON THE INVENTORY BAR
 def draw_selected(x,y,colour):
     size=2
     pygame.draw.line(pixel,colour,(x-1,y-1),(x+4,y-1),size)
@@ -385,10 +370,8 @@ def draw_selected(x,y,colour):
     pygame.draw.line(pixel,colour,(x+16,y+15),(x+11,y+15),size)
 
 
+#PROCESSES THE INVENTORY AND CRAFTING MENU
 def draw_inventory():
-
-
-
     xSize=3
     ySize=8
 
@@ -505,7 +488,7 @@ def draw_inventory():
 
 
 
-
+#PROCESS CHARACTER MOVEMENT AROUND THE WORLD
 def move_character():
     global worldx,worldy,velocityy
     if collision_array[2]==False:
@@ -533,19 +516,22 @@ def move_character():
     if velocityy<1 and climbing:
         velocityy+=climbing_speed
 
+#ITERATES BLOCKS AND DETECTS A COLLISION WITH THE PLAYER
 def check_collisions():
     for b in block_array:
         b.check_col()
 
+#ITERATE BLOCKS AND DRAW EACH ONE
 def draw_blocks():
     for b in block_array:
         b.draw()
 
+#IERATE THE BACKGROUND BLOCKS AND DRAW THEM
 def draw_back():
     for b in back_array:
         b.draw()
 
-#worldx,worldy needed and starty. 1000 is very bottom, first added. -600 is top. each bit 16
+#GENERATES THE ARRAY OF BLOCKS THAT SHOULD CURRENTLY BE ON THE SCREEN
 def generate_block_array():
     global block_array
     block_array=[]
@@ -559,6 +545,7 @@ def generate_block_array():
                 block_array.append(add)
     #if block in worldx-320 worldy-180
 
+#GENERATES THE ARRAY OF BACKGROUND BLOCKS THAT SHOULD CURRENTY BE ON THE SCREEN
 def generate_back_array():
     global back_array
     back_array=[]
@@ -571,6 +558,7 @@ def generate_back_array():
             if add!=0:
                 back_array.append(add)
 
+#GENERATES VEINS OF A GIVEN BLOCK OR EMPTY STATE, CAN BE GIVEN LENGTH SIZE ETC
 def generate_veins(transform,total,minH,maxH,minStart,maxStart,size):
     global global_array
     for i in range(total):
@@ -594,12 +582,11 @@ def generate_veins(transform,total,minH,maxH,minStart,maxStart,size):
                     global_array[px][py].set_item(transform)
 
 
-
+#GENERATES BIG CAVES RANDOMLY IN THE WORLD
 def generate_caves(total,minH,maxH,minStart,maxStart,length,width):
     #Give weight to certain direction
     #Length of cave and width, will cross into others to create caves
     global global_array
-    
     for i in range(total):
         px,py=random.randint(0,blocksx-1),random.randint(minStart,maxStart)
         move_arrayx=[-1,0,1]
@@ -618,9 +605,9 @@ def generate_caves(total,minH,maxH,minStart,maxStart,length,width):
                 py=minH
             elif py>maxH:
                 py=maxH
-
             global_array[px][py].set_item("None")
 
+#REMOVES BLOCKS THAT HAVE NO DIRECT NEIGHBOURS
 def remove_lone_blocks():
     global global_array
     for y in range(blocksy):
@@ -631,13 +618,12 @@ def remove_lone_blocks():
                         if global_array[x-1][y].item=="None" and global_array[x+1][y].item=="None" and global_array[x][y-1].item=="None" and global_array[x][y+1].item=="None":
                             global_array[x][y].set_item("None")
                 
-
+#CREATES A LAYER OF BLOCKS BETWEEN A MAX AND MINIMUM
 def create_layer(min,max,item):#Use to create a layer of blocks
     for y in range(max-min):
         for x in range(blocksx):
             global_array[x][y+min].set_item(item)
             back_global_array[x][y+min].set_item(item)
-
     #Blending into current ground
     odds=0.9
     for y in range(8):
@@ -649,14 +635,14 @@ def create_layer(min,max,item):#Use to create a layer of blocks
                     global_array[x][max+y].set_item(item)
                     back_global_array[x][max+y].set_item(item)
 
-#For now fill space under ground level
+#DRAW BROWN BACKGROUND IF UNDERGROUND, BEHIND BACKGROUND BLOCKS
 def background():
     if worldy<-(ground_level+180):
         pixel.fill([64,41,9])
     elif worldy<-(ground_level-90):
         pygame.draw.rect(pixel,(64,41,9),(0,ground_level+90+worldy,320,300))#Y pos should be where level 1000 is
 
-#God
+#TOGGLE THE GOD MODE, THESE VALUES HERE CAN BE CHANGED
 def toggle_god():
     global double_jump,mine_mult,action_dist_mult,action_distance,god_mode
     if god_mode==False:
@@ -672,6 +658,7 @@ def toggle_god():
         action_distance=56*action_dist_mult
         god_mode=False
 
+#RUNS ON A RIGHT CLICK, CHECKS IF PLAYER HAS PLACED OR USED ITEM ETC
 def check_action():
     #Place Item here
     #Use maths to calculate where to place new block and use inventory selection to place
@@ -691,7 +678,7 @@ def check_action():
                             global_array[x][y].set_item(inventory.items[inventory.selected].item)
                             inventory.remove_item(inventory.items[inventory.selected].item,1)
 
-
+#SIMPLY CHECKS IF PLAYER IS ON A LADDER - change this to just return current block and check
 def check_ladder():
     #143 IS BLOCK PLAYER IS AT
     if block_array[143].item=="Ladder":
@@ -699,10 +686,21 @@ def check_ladder():
     else:
         return False
 
+#DRAW THE CURSOR ON THE SCREEN SURFACE
 def draw_cursor():
     screen.blit(cursor_img,(int(mousex/(320/width)),int(mousey/(180/height))))
 
-#Create blocks from bottom, with semi random heights
+######################################################################################################
+
+
+
+
+
+
+
+
+#WORLD SETUP
+######################################################################################################
 global_array=[]
 back_global_array=[]
 light_global_array=[]
@@ -742,7 +740,14 @@ for x in range(blocksx):
     global_array[x][count].set_item("Grass")
     #Set all light above here to higher etc
 
-
+#INITIALISE RECIPES HERE
+recipe_dict=[Recipe("Brick",[["Dirt",5],["Stone",2]],3),
+            Recipe("Light",[["Dirt",5]],3),
+            Recipe("Ladder",[["Dirt",5]],10),
+            Recipe("Glass",[["Dirt",2]],10),
+            Recipe("Metal",[["Iron",5]],5),
+            Recipe("Stonewall",[["Stone",5]],5),
+            Recipe("Chest",[["Dirt",5],["Iron",2]],1)]
 #Generate veins and caves trans,total,min,max,size
 ##Iron,Lead,Copper,Gold
 
@@ -769,10 +774,15 @@ generate_veins("Diamond",int(blocksx/10),0,200,0,200,5)
 
 remove_lone_blocks()
 
-
 block_array=[]
 back_array=[]
 inventory=Inventory()
+
+######################################################################################################
+
+
+#MAIN GAME LOOP
+######################################################################################################
 
 while True:
     pixel.fill([173,216,230])
@@ -875,6 +885,9 @@ while True:
 
     pygame.display.flip()
     clock.tick(60)
+
+#####################################################################################################
+
 
 #Removed lone blocks 13/06
 #Added double cave gen 13/06
