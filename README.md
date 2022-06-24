@@ -28,6 +28,8 @@
     - Trees & axe
 
 ## To-Do List
+* _Code_
+    - Format all python nicer
 * _Bugs_
     - Fix line glitch around y = 1050
 * _Performance_
