@@ -1,3 +1,13 @@
+"""
+README: 
+-   Game draws to the surface 'pixel' which is 320x180 pixels, this is scaled each frame to the users
+    window size which is calculated at the start. In 9:16 aspect ratio.
+-   World is a 2D array of block items which is used to calculate the blocks currently on screen and
+    draw/process them. The same process is done for the background blocks and lighting too.
+-   The inventory is all stored in a single inventory object and is made up of different classes of
+    items such as blocks tools etc.
+"""
+
 #INITIALISING
 ######################################################################################################
 import sys,pygame,random,copy,math
@@ -148,9 +158,10 @@ class ItemBlock(Item):
 #CLASS FOR THE MAIN INVENTORY
 class Inventory:
     def __init__(self):
+        #Main array for all inventory items, stored as objects or 'None'
         self.items=[Tool("Pickaxe",pickaxe),"None","None","None","None","None","None","None",
         "None","None","None","None","None","None","None","None",
-        "None","None","None","None","None","None","None","None"]#Item,Count
+        "None","None","None","None","None","None","None","None"]
         self.selected=0
         self.held="None"
 
@@ -160,8 +171,7 @@ class Inventory:
                 if i.item==item:
                     i.count+=number
                     return
-
-
+        #Make new space for item, combine these so less loops!
         for i in range(len(self.items)):
             if self.items[i]=="None":#Change this depending on item
                 self.items[i]=ItemBlock(item)
@@ -208,8 +218,6 @@ class Block:
         self.max_health=10
         self.back=False
         self.passable=False
-    def drawR(self):
-        pygame.draw.rect(pixel,(255,0,0),(worldx+self.x,worldy+self.y,16,16),2)
 
     def draw(self):
         if self.item=="None":
@@ -772,9 +780,10 @@ inventory=Inventory()#Creates inventory object
 #MAIN GAME LOOP
 ######################################################################################################
 
-while True:
-    pixel.fill([173,216,230])
+while True:#Run until closed
+    pixel.fill([173,216,230])#Fills background blue
 
+    #Runs functions for mouse clicks and climbing
     if right_mouse_down or right_clicked:
         check_action()
     if climbing==True:
@@ -783,28 +792,32 @@ while True:
         else:
             climbing_speed=1
 
+    #FUNCTIONS RUNNING EVERY FRAME
     generate_block_array()
     generate_back_array()
-
-
     check_collisions()
     move_character()
+    ########################DRAWING
     background()
     draw_back()
     draw_blocks()
     draw_character()
     check_ladder()
-
     draw_inventory()
+
     fps_counter()
     dev_info()
+    ###############################
 
+    #Reset variables
     clicked=False
     right_clicked=False
     collision_array=[False,False,False,False]#N,E,S,W
-    screen.blit(pygame.transform.scale(pixel,(width,height)),(0,0))
-    draw_cursor()
-    for event in pygame.event.get():
+
+    screen.blit(pygame.transform.scale(pixel,(width,height)),(0,0))#Draws pixel surface onto screen
+    draw_cursor()#Draw cursor here
+
+    for event in pygame.event.get():#Cycles all events (keys)
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
