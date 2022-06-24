@@ -19,7 +19,6 @@ height=info.current_w*(9/16)
 screen = pygame.display.set_mode((width,height))#pygame.FULLSCREEN
 pixel = pygame.Surface((320,180))#pygame.FULLSCREEN
 pygame.mouse.set_visible(False)
-
 #MAIN GLOBAL VARIABLES
 worldx,worldy=0,0
 blocksx,blocksy=200,2000
