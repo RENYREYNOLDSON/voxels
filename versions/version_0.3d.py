@@ -685,6 +685,10 @@ def check_ladder():
 def draw_cursor():
     screen.blit(cursor_img,(int(mousex/(320/width)),int(mousey/(180/height))))
 
+#FULLSCREEN TOGGLE
+def fullscreen():
+    pygame.display.toggle_fullscreen()
+
 ######################################################################################################
 
 
@@ -829,6 +833,8 @@ while True:#Run until closed
             elif event.key==pygame.K_w:
                 climbing=False
                 climbing_speed=1
+            elif event.key==pygame.K_f:
+                fullscreen()
         elif event.type==pygame.KEYDOWN:
             if event.key==pygame.K_d:
                 velocityx-=speed
