@@ -1,16 +1,16 @@
+#INITIALISING
+######################################################################################################
 import sys,pygame,random,copy,math
 pygame.init()
 clock=pygame.time.Clock()
 info = pygame.display.Info()
-
 width=info.current_w
 height=info.current_w*(9/16)
-
 screen = pygame.display.set_mode((width,height))#pygame.FULLSCREEN
 pixel = pygame.Surface((320,180))#pygame.FULLSCREEN
-
 pygame.mouse.set_visible(False)
 
+#MAIN GLOBAL VARIABLES
 worldx,worldy=0,0
 blocksx,blocksy=200,2000
 ground_level=1000
@@ -26,20 +26,18 @@ right_mouse_down=False
 inventory_open=False
 climbing=False
 
+#LOADING FONTS
 font = pygame.font.SysFont("Arial" , 20)
 font=pygame.font.Font("./fonts/small_pixel.ttf", 6)
 
+#LOADING IMAGES
 character = pygame.image.load("./textures/character.png").convert_alpha()
-
 cursor_img = pygame.image.load("./textures/cursor.png").convert_alpha()
 break_0 = pygame.image.load("./textures/break_0.png").convert_alpha()
 break_1 = pygame.image.load("./textures/break_1.png").convert_alpha()
 break_2 = pygame.image.load("./textures/break_2.png").convert_alpha()
 pickaxe = pygame.image.load("./textures/pickaxe.png").convert_alpha()
-
-#Block images
 dirt_img = pygame.image.load("./textures/Dirt.png").convert()
-
 dirt_imgB = pygame.image.load("./textures/Dirt.png").convert()
 dirt_imgB.fill((50,50,50), special_flags=pygame.BLEND_RGB_ADD) 
 stone_img = pygame.image.load("./textures/Stone.png").convert()
@@ -59,21 +57,14 @@ metal_img = pygame.image.load("./textures/Metal.png").convert_alpha()
 chest_img = pygame.image.load("./textures/Chest.png").convert_alpha()
 stonewall_img = pygame.image.load("./textures/Stonewall.png").convert_alpha()
 
-#Importing Sounds
-pygame.mixer.init()
+#LOADING SOUNDS
+pygame.mixer.init()#Initialise sound mixer
 break_SOUND=pygame.mixer.Sound("./sounds/break.ogg")
 pygame.mixer.Sound.set_volume(break_SOUND,0.2)
-
 click_SOUND=pygame.mixer.Sound("./sounds/click.ogg")
 pygame.mixer.Sound.set_volume(click_SOUND,0.3)
 
-
-
-
-
-
-
-#Items - store in folder and load later on
+#DICTIONARY OF ALL BLOCK ITEMS
 item_dict={"Dirt":[(127,81,18),(123,76,15),10,dirt_img,dirt_imgB],
             "Grass":[(127,81,18),(123,76,15),10,grass_img],
             "Stone":[(100,100,100),(110,110,100),30,stone_img,stone_imgB],
@@ -91,46 +82,32 @@ item_dict={"Dirt":[(127,81,18),(123,76,15),10,dirt_img,dirt_imgB],
             "Chest":[(0,200,250),(20,240,240),20,chest_img],
             "Stonewall":[(0,200,250),(20,240,240),100,stonewall_img],}
 
-
-
-
-
-
-
-###########DEVELOPER OPTIONS
+#DEVELOPER OPTIONS
 double_jump=False
 speed_mult=1
 jump_mult=1
 mine_mult=1
 action_dist_mult=1
 god_mode=False
-#################
 
-###########Global Variables
+#Additional Global Variables
 speed=1*speed_mult
 jump_velocity=5*jump_mult
 gravity=10
 action_distance=56*action_dist_mult
 climbing_speed=1
-
 count=1050
 starty=17000
 startx=-(blocksx*8)
-###################
+
+#####################################################################################################
 
 
-def fps_counter():#DISPLAYS FPS IN UPPER CORNER
-    fps = str(int(clock.get_fps()))
-    fps_t = font.render(fps , False, pygame.Color("RED"))
-    pixel.blit(fps_t,(0,0))
 
-def dev_info():#SHOWS COORDINATES AND ANY OTHER DEV INFO
-    x= font.render(str("x:"+str(int((worldx+8)/16))+" y:"+str(int((starty+worldy)/16))), False, pygame.Color("RED"))
-    pixel.blit(x,(0,174))
 
 
 #CLASSES
-####################################################################################################
+#####################################################################################################
 
 #CLASS FOR EACH CRAFTING RECIPE
 class Recipe:
@@ -321,6 +298,16 @@ class Block:
 #FUNCTIONS
 ######################################################################################################
 
+#DISPLAYS FPS IN UPPER CORNER
+def fps_counter():
+    fps = str(int(clock.get_fps()))
+    fps_t = font.render(fps , False, pygame.Color("RED"))
+    pixel.blit(fps_t,(0,0))
+
+#SHOWS COORDINATES AND ANY OTHER DEV INFO
+def dev_info():
+    x= font.render(str("x:"+str(int((worldx+8)/16))+" y:"+str(int((starty+worldy)/16))), False, pygame.Color("RED"))
+    pixel.blit(x,(0,174))
 
 #ADD RADIUS OF LIGHT TO LIGHT ARRAY WHEN LAMP PLACED ETC
 def update_light_array(lux,x,y):
@@ -701,6 +688,8 @@ def draw_cursor():
 
 #WORLD SETUP
 ######################################################################################################
+
+#CREATING GLOBAL BLOCK ARRAYS
 global_array=[]
 back_global_array=[]
 light_global_array=[]
@@ -719,7 +708,8 @@ for x in range(blocksx):
     back_global_array.append(newB)
     light_global_array.append(newL)
 
-#Change at most -3 3
+
+#GENERATING SURFACE - redo this
 change=0
 weight=0
 for x in range(blocksx):
@@ -738,7 +728,7 @@ for x in range(blocksx):
         global_array[x][y].set_item("Dirt")
         back_global_array[x][y].set_item("Dirt")
     global_array[x][count].set_item("Grass")
-    #Set all light above here to higher etc
+
 
 #INITIALISE RECIPES HERE
 recipe_dict=[Recipe("Brick",[["Dirt",5],["Stone",2]],3),
@@ -748,21 +738,18 @@ recipe_dict=[Recipe("Brick",[["Dirt",5],["Stone",2]],3),
             Recipe("Metal",[["Iron",5]],5),
             Recipe("Stonewall",[["Stone",5]],5),
             Recipe("Chest",[["Dirt",5],["Iron",2]],1)]
-#Generate veins and caves trans,total,min,max,size
-##Iron,Lead,Copper,Gold
 
-#Stone layer
-create_layer(0,1000,"Stone")
-"""
-back_global_array=copy.deepcopy(global_array)
-"""
+
+#Set back array blocks to back
 for i in back_global_array:
     for b in i:
         b.back=True
 
+
+#GENERATING CAVES AND VEINS WITHIN THE WOLRD, ALL EFFECTS TERRAIN GENERATION
+create_layer(0,1000,"Stone")#Stone Layer
 generate_caves(int(blocksx),20,1050,100,1000,300,10)#LONG CAVES
 generate_veins("None",int(blocksx),0,1050,0,950,200)#HOLLOW CAVES
-
 generate_veins("Dirt",int(blocksx*2),0,1000,0,900,200)
 generate_veins("Stone",int(blocksx/2),950,1050,950,1030,100)
 generate_veins("Marble",int(blocksx/20),0,1000,0,700,500)
@@ -771,12 +758,13 @@ generate_veins("Lead",int(blocksx),0,1000,0,980,20)
 generate_veins("Copper",int(blocksx),0,1000,0,950,10)
 generate_veins("Gold",int(blocksx),0,500,0,480,10)
 generate_veins("Diamond",int(blocksx/10),0,200,0,200,5)
-
 remove_lone_blocks()
 
+#INITIALISES THE ARRAYS THAT HOLD BLOCKS ON THE SCREEN
 block_array=[]
 back_array=[]
-inventory=Inventory()
+
+inventory=Inventory()#Creates inventory object
 
 ######################################################################################################
 
