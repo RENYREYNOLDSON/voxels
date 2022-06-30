@@ -723,14 +723,9 @@ for x in range(blocksx):
 
 #GENERATING SURFACE - redo this
 change=0
-weight=0
 for x in range(blocksx):
-    change+=random.randint(-1-int(weight/2),1-int(weight/2))
-    weight+=change
-    if change>2:
-        change=2
-    elif change<-2:
-        change=-2
+    change=random.choices([-2,-1,0,1,2],[1,10,200,10,1],k=1)
+    change=change[0]
     count+=change
     if count<ground_level:
         count=ground_level
@@ -740,6 +735,7 @@ for x in range(blocksx):
         global_array[x][y].set_item("Dirt")
         back_global_array[x][y].set_item("Dirt")
     global_array[x][count].set_item("Grass")
+    back_global_array[x][count].set_item("Dirt")
 
 
 #INITIALISE RECIPES HERE
@@ -933,6 +929,7 @@ while True:#Run until closed
 #Made inventory look better 17/06
 #Made crafting class and now it works! 17/06
 #Added more craftables 21/06
+#Fixed world generation 30/06
 
 
 #Make climbing smoother
